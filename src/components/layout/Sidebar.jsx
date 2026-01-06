@@ -1,12 +1,74 @@
-import { Zap } from "lucide-react";
 import React from "react";
+import {
+  BarChart3,
+  Calendar,
+  ChevronDown,
+  CreditCard,
+  FileText,
+  LayoutDashboard,
+  MessageSquare,
+  Package,
+  Settings,
+  ShoppingBag,
+  Users,
+  Zap,
+} from "lucide-react";
 
-const Sidebar = () => {
+const menuItems = [
+  {
+    id: "dashboard",
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    active: true,
+    badge: "New",
+  },
+  {
+    id: "analytics",
+    label: "Analytics",
+    icon: BarChart3,
+    submenu: [
+      { id: "overview", label: "Overview" },
+      { id: "reports", label: "Reports" },
+      { id: "insights", label: "Insights" },
+    ],
+  },
+  {
+    id: "users",
+    label: "Users",
+    icon: Users,
+    count: "2.4k",
+    submenu: [
+      { id: "all-users", label: "All Users" },
+      { id: "roles", label: "Roles & Permissions" },
+      { id: "activity", label: "User Activity" },
+    ],
+  },
+  {
+    id: "ecomerce",
+    label: "E-commerce",
+    icon: ShoppingBag,
+    submenu: [
+      { id: "products", label: "Products" },
+      { id: "orders", label: "Orders" },
+      { id: "customers", label: "Customers" },
+    ],
+  },
+  { id: "inventory", label: "Inventory", icon: Package, count: "847" },
+  { id: "transactions", label: "Transactions", icon: CreditCard },
+  { id: "messages", label: "Messages", icon: MessageSquare, abadge: "12" },
+  { id: "calendar", label: "Calendar", icon: Calendar },
+  { id: "reports", label: "Reports", icon: FileText },
+  { id: "settings", label: "Settings", icon: Settings },
+];
+const Sidebar = ({ collapsed, onToggle, currentPage, onPageChange }) => {
   return (
     <div
-      className="transition duration-300 ease-in-out bg-white/80 dark:bg-slate-900/80
+      className={`${
+        collapsed ? "w-20" : "w-72"
+      } " transition duration-300 ease-in-out bg-white/80
+       dark:bg-slate-900/80
   backdrop-blur-xl border-r border-slate-200/50
-   dark:border-slate-700/50 flex flex-col relative z-10"
+   dark:border-slate-700/50 flex flex-col relative z-10"`}
     >
       {/* logo */}
       <div className="p-6 border-b border-slate-200/50 dark: border-slate-700/50">
@@ -18,25 +80,72 @@ flex items-center justify-center shadow-lg"
             <Zap className=" w-6 h-6 text-white" />
           </div>
           {/* conditional rendering */}
-          <div>
-            <h1 className="text-xl font-bold text-slate-800 dark:text-white">
-              DashBoard
-            </h1>
-            <p className="text-xs  text-slate-500 dark:text-slate-400">
-              Admin Panel
-            </p>
-          </div>
+          {!collapsed && (
+            <div>
+              <h1 className="text-xl font-bold text-slate-800 dark:text-white">
+                DashBoard
+              </h1>
+              <p className="text-xs  text-slate-500 dark:text-slate-400">
+                Admin Panel
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-2 overflow-y-auto"></nav>
+      <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+        {menuItems.map((item) => {
+          return (
+            <div key={item.id} className="dark:text-slate-300">
+              <button
+                className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200
+                  ${
+                    currentPage === item.id || item.active
+                      ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/25"
+                      : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50"
+                  }`}
+              >
+                <div className="flex items-center space-x-3">
+                  <item.icon className="w-5 h-5" />
+                  <>
+                    <span className="font-medium ml-2">{item.label}</span>
+                    {item.badge && (
+                      <span className="px-2 py-1 text-xs bg-red-500 text-white rounded-full">
+                        {item.badge}
+                      </span>
+                    )}
+                    {item.count && (
+                      <span
+                        className="px-2 py-1 text-xs bg-slate-200
+                       dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full"
+                      >
+                        {item.count}
+                      </span>
+                    )}
+                  </>
+                </div>
+
+                {item.submenu && (
+                  <ChevronDown className="w-4 h-4 transition-transform" />
+                )}
+              </button>
+              {/* submenus */}
+              <div className="ml-8 mt-2 space-y-1">
+                {/* {item.submenu.map((subitem) => {
+                  return <button>{subitem.label}</button>;
+                })} */}
+              </div>
+            </div>
+          );
+        })}
+      </nav>
 
       {/* user profile */}
       <div className="p-4 border-t border-slate-200/50 dark:border-r-slate-700/50">
         <div className="flex items-center space-x-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50">
           <img
-            src="https://i.ibb.co/3yDfmqyp/hassan3.png"
+            src="../../assets/user.jpeg"
             alt="user"
             className="w-10 h-15 rounded-full ring-2 ring-blue-500"
           />
